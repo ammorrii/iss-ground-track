@@ -151,6 +151,22 @@ def check_data():
     print(' /// END CHECKING ISS DATA /// ')
 
 
+def to_lat_lon(positions, times):
+
+    x = positions[:, 0]
+    y = positions[:, 1]
+    z = positions[:, 2]
+    mag_x_y = (x**2 + y**2)**0.5
+    rotation_angle = ( 280.46061837 + 360.98564736629 * (times - 2451545.0) ) % 360
+
+    latitude = np.degrees( np.arctan2(z, mag_x_y) )
+
+    longitude_raw = np.degrees( np.arctan2(y, x) ) - rotation_angle
+    longitude = ( (longitude_raw + 180) % 360 ) - 180
+
+    return latitude, longitude
+
+
 # /// MAIN BLOCK ///
 
 if __name__ == '__main__':  
@@ -161,7 +177,6 @@ if __name__ == '__main__':
     sat = Satrec.twoline2rv(line1, line2)
 
     time_now = datetime.now(timezone.utc)
-
     jd, fr = jday(time_now.year, time_now.month, time_now.day,
               time_now.hour, time_now.minute, time_now.second)
 
@@ -173,12 +188,10 @@ if __name__ == '__main__':
 
     iss_altitude = ( r[0]**2 + r[1]**2 + r[2]**2 )**0.5 - earth_radius
     iss_speed = ( v[0]**2 + v[1]**2 + v[2]**2 )**0.5
+
     
     positions, times = propagate(sat, jd, fr, minutes=90, step_s=30)
 
-
-    ask_check_data = input('Do you want to check the data? (y/n): ')
-    if ask_check_data == 'y':
-        check_data()
-    else:
-        print('ok whatever')
+    latitude, longitude = to_lat_lon(positions, times)
+    print('longitude:', longitude[0])
+    print('latitude:', latitude[0])    
