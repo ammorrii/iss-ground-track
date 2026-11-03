@@ -38,7 +38,6 @@ def get_iss_tle():
 
     return lines[1:]
 
-
 # --- This function propagates the ISS's positions and its time ---
 def propagate(sat, jd, fr, minutes=90, step_s=30):
 
@@ -57,6 +56,21 @@ def propagate(sat, jd, fr, minutes=90, step_s=30):
 
     return np.array(positions), np.array(times)
 
+# --- This function converts the ISS's positions and times to latitude and longitude ---
+def to_lat_lon(positions, times):
+
+    x = positions[:, 0]
+    y = positions[:, 1]
+    z = positions[:, 2]
+    mag_x_y = ( x**2 + y**2 )**0.5
+    rotation_angle = ( 280.46061837 + 360.98564736629 * ( times - 2451545.0 ) ) % 360
+
+    latitude = np.degrees( np.arctan2(z, mag_x_y) )
+
+    longitude_raw = np.degrees( np.arctan2(y, x) ) - rotation_angle
+    longitude = ( (longitude_raw + 180) % 360 ) - 180
+
+    return latitude, longitude
 
 # --- This function checks the code's data to ensure all is good ---
 def check_data():
@@ -148,23 +162,66 @@ def check_data():
 
     print()
 
+    # --- Latitude should be between -51.6 and 51.6 degrees otherwise youre doomed ---
+    print('Latitude Check for Propagation Expectation: Latitude: -51.6 to 51.6 degrees')
+    latitude_check = False
+    if ( 51 <= max(latitude) < 52) and (-52 <= min(latitude) < -51):
+        latitude_check = True
+
+    if latitude_check == True:
+        print('Latitude check for propagation:  PASSED -', 'Theyre all between -51.6 and 51.6 degrees')
+    else:
+        print('Latitude check for propagation:  FAILED -', 'At least one or more position is not between -51.6 and 51.6 degrees')
+
+    print()
+
+    # --- Longitude should be between -180 and 180 degrees otherwise youre doomed ---
+    print('Longitude Check for Propagation Expectation: Longitude: -180 to 180 degrees')
+    longitude_check = False
+
+    for lon in longitude:
+        if (-180 <= lon <= 180):
+            longitude_check = True
+        else:
+            longitude_check = False
+            break
+
+    if longitude_check == True:
+        print('Longitude check for propagation:  PASSED -', 'Theyre all between -180 and 180 degrees')
+    else:
+        print('Longitude check for propagation:  FAILED -', 'At least one or more position is not between -180 and 180 degrees')
+
+    print()
+
+    # --- Latitude and Longitude should be 181 elements each otherwise youre doomed ---
+    print('Latitude and Longitude Check for Propagation Expectation: Latitude: 181, Longitude: 181')
+    lat_lon_check = False
+
+    if len(latitude) == 181 and len(longitude) == 181:
+        lat_lon_check = True
+
+    if lat_lon_check == True:
+        print('Latitude and Longitude check for propagation:  PASSED -', f'Latitude: {len(latitude)}, Longitude: {len(longitude)}')
+    else:
+        print('Latitude and Longitude check for propagation:  FAILED -', f'Latitude: {len(latitude)}, Longitude: {len(longitude)}')
+
+    print()
+
+    # --- No NaN values in latitude and longitude otherwise youre doomed ---
+    print('NaN Check for Latitude and Longitude Expectation: No NaN values in Latitude and Longitude')
+    nan_check = True
+
+    if np.any( np.isnan(latitude) ) or np.any( np.isnan(longitude) ):
+        nan_check = False
+
+    if nan_check == True:
+        print('NaN check for Latitude and Longitude:  PASSED -', 'No NaN values in Latitude and Longitude')
+    else:
+        print('NaN check for Latitude and Longitude:  FAILED -', 'At least one or more NaN values in Latitude and Longitude')
+
+    print()
+
     print(' /// END CHECKING ISS DATA /// ')
-
-
-def to_lat_lon(positions, times):
-
-    x = positions[:, 0]
-    y = positions[:, 1]
-    z = positions[:, 2]
-    mag_x_y = (x**2 + y**2)**0.5
-    rotation_angle = ( 280.46061837 + 360.98564736629 * (times - 2451545.0) ) % 360
-
-    latitude = np.degrees( np.arctan2(z, mag_x_y) )
-
-    longitude_raw = np.degrees( np.arctan2(y, x) ) - rotation_angle
-    longitude = ( (longitude_raw + 180) % 360 ) - 180
-
-    return latitude, longitude
 
 
 # /// MAIN BLOCK ///
@@ -191,7 +248,9 @@ if __name__ == '__main__':
 
     
     positions, times = propagate(sat, jd, fr, minutes=90, step_s=30)
-
     latitude, longitude = to_lat_lon(positions, times)
-    print('longitude:', longitude[0])
-    print('latitude:', latitude[0])    
+    print('longitude right now:', longitude[0])
+    print('latitude right now:', latitude[0])  
+     # THIS IS THE LATITUDE AND LOGNITGUDE OF THE ISS AT THE CURRENT TIME I DID ITTTQIEWGJWKNM 
+
+    check_data()
