@@ -4,6 +4,7 @@ import requests
 import os
 import time
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 # /// CONSTANTS ///
@@ -28,7 +29,7 @@ def get_iss_tle():
             with open(file_name) as f:
                 return f.read().splitlines()[1:]
     
-    print('downloading')
+    print('file too old or not found, downloading new file')
     response = requests.get(url, timeout = 10)
     lines = response.text.splitlines()
     response.raise_for_status()
@@ -223,6 +224,30 @@ def check_data():
 
     print(' /// END CHECKING ISS DATA /// ')
 
+# --- This function plots the ISS's ground track on a map of the Earth ---
+def plot_ground_track(latitude, longitude):
+
+    plot_break =  np.where( abs(np.diff(longitude)) > 100 )[0]
+    
+    longitude_plot = np.insert(longitude, plot_break + 1, np.nan)
+    latitude_plot = np.insert(latitude, plot_break + 1, np.nan)
+    plt.plot(longitude_plot, latitude_plot, color="#BFE2EE", linewidth=0.75)
+    plt.plot(longitude_plot[0], latitude_plot[0], marker='o', color="#9ED5E7", markersize=5)
+    plt.annotate('ISS', xytext=(longitude_plot[0] - 7, latitude_plot[0] + 6), xy=(longitude_plot[0], latitude_plot[0]), color="#9ED5E7", fontsize=8, fontweight='bold', arrowprops=dict(arrowstyle='->', color="#9ED5E7", lw=0.5))
+    plt.xlim(-180, 180)
+    plt.ylim(-90, 90)
+
+    plt.title('ISS Ground Track Over 90 Minutes')
+    plt.xlabel('Longitude (degrees)')
+    plt.ylabel('Latitude (degrees)')
+
+    image = plt.imread('earth_map.png')
+    plt.imshow(image, extent=[-180, 180, -90, 90])
+
+    plt.grid(True, linestyle='--', linewidth=0.5, color="#525558", alpha=0.5)
+    plt.gca().set_aspect('equal')
+
+    plt.show()
 
 # /// MAIN BLOCK ///
 
@@ -249,8 +274,32 @@ if __name__ == '__main__':
     
     positions, times = propagate(sat, jd, fr, minutes=90, step_s=30)
     latitude, longitude = to_lat_lon(positions, times)
-    print('longitude right now:', longitude[0])
-    print('latitude right now:', latitude[0])  
-     # THIS IS THE LATITUDE AND LOGNITGUDE OF THE ISS AT THE CURRENT TIME I DID ITTTQIEWGJWKNM 
 
-    check_data()
+
+
+    ask_location = input('Do you want to check the ISS location? (y/n): ').lower()
+    if ask_location == 'y':
+        print('longitude right now:', longitude[0])
+        print('latitude right now:', latitude[0])
+    elif ask_location == 'n':
+        print('ok whatever')
+    else:
+        print('what are you saying')
+
+
+    ask_check = input('Do you want to check the data? (y/n): ').lower()
+    if ask_check == 'y':
+        check_data()
+    elif ask_check == 'n':
+        print('ok whatever')
+    else:
+        print('what are you saying')
+
+
+    ask_plot = input('Do you want to plot the ground track? (y/n): ').lower()
+    if ask_plot == 'y':
+        plot_ground_track(latitude, longitude)
+    elif ask_plot == 'n':
+        print('ok whatever')
+    else:
+        print('what are you saying')
