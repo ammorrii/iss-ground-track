@@ -76,10 +76,10 @@ def to_lat_lon(positions, times):
 # --- This function checks the code's data to ensure all is good ---
 def check_data():
 
+    print('-----------------------------------------------')
     print(' /// CHECKING ISS DATA /// ')
 
     print()
-
     
     # --- iss altitude and speed check should be around 400km and 7.66km/s otherwise youre doomed ---
     print('ISS Altitude and Speed Check Expectation: Altitude: 350-450 km, Speed: 7.5-8.0 km/s')
@@ -88,9 +88,9 @@ def check_data():
         iss_altitude_speed_check = True
 
     if iss_altitude_speed_check == True:
-        print('ISS altitude and speed check:  PASSED -', f'Altitude: {iss_altitude:.2f} km, Speed: {iss_speed:.2f} km/s')
+        print('ISS altitude and speed check:          | PASSED |-', f'Altitude: {iss_altitude:.2f} km, Speed: {iss_speed:.2f} km/s')
     else:
-        print('ISS altitude and speed check: FAILED -', f'Altitude: {iss_altitude:.2f} km, Speed: {iss_speed:.2f} km/s')
+        print('ISS altitude and speed check:          | FAILED |-', f'Altitude: {iss_altitude:.2f} km, Speed: {iss_speed:.2f} km/s')
 
     print()
 
@@ -103,9 +103,9 @@ def check_data():
         TLE_check = True
 
     if TLE_check == True:
-        print('TLE check:  PASSED -', f'Line 1 length: {len(line1)}, Line 2 length: {len(line2)}')
+        print('TLE check:                             | PASSED |-', f'Line 1 length: {len(line1)}, Line 2 length: {len(line2)}')
     else:
-        print('TLE check:  FAILED -', f'Line 1 length: {len(line1)}, Line 2 length: {len(line2)}')
+        print('TLE check:                             | FAILED |-', f'Line 1 length: {len(line1)}, Line 2 length: {len(line2)}')
 
     print()
 
@@ -121,9 +121,9 @@ def check_data():
         propogate_check = True
 
     if propogate_check == True:
-        print('Propagate check:  PASSED -', f'Positions: {propogation_positions}, Times: {propogation_times}')
+        print('Propagate check:                       | PASSED |-', f'Positions: {propogation_positions}, Times: {propogation_times}')
     else:
-        print('Propagate check:  FAILED -', f'Positions: {propogation_positions}, Times: {propogation_times}')
+        print('Propagate check:                       | FAILED |-', f'Positions: {propogation_positions}, Times: {propogation_times}')
 
     print()
 
@@ -139,9 +139,9 @@ def check_data():
             break
 
     if altitude_check == True:
-        print('Altitudes check for propagation:  PASSED -', 'Theyre all between 350 and 450 km')
+        print('Altitudes check for propagation:       | PASSED |-', 'Theyre all between 350 and 450 km')
     else:
-        print('Altitudes check for propagation:  FAILED -', 'At least one or more position is not between 350 and 450 km')
+        print('Altitudes check for propagation:       | FAILED |-', 'At least one or more position is not between 350 and 450 km')
 
     print()
 
@@ -157,9 +157,9 @@ def check_data():
         gap_check = True
 
     if gap_check == True:
-        print('Gap check for propagation:  PASSED -',  f'Gap: {gap:.2f} km')
+        print('Gap check for propagation:             | PASSED |-',  f'Gap: {gap:.2f} km')
     else:
-        print('Gap check for propagation:  FAILED -', f'Gap: {gap:.2f} km')
+        print('Gap check for propagation:             | FAILED |-', f'Gap: {gap:.2f} km')
 
     print()
 
@@ -170,9 +170,9 @@ def check_data():
         latitude_check = True
 
     if latitude_check == True:
-        print('Latitude check for propagation:  PASSED -', 'Theyre all between -51.6 and 51.6 degrees')
+        print('Latitude check for propagation:        | PASSED |-', 'Theyre all between -51.6 and 51.6 degrees')
     else:
-        print('Latitude check for propagation:  FAILED -', 'At least one or more position is not between -51.6 and 51.6 degrees')
+        print('Latitude check for propagation:        | FAILED |-', 'At least one or more position is not between -51.6 and 51.6 degrees')
 
     print()
 
@@ -188,23 +188,23 @@ def check_data():
             break
 
     if longitude_check == True:
-        print('Longitude check for propagation:  PASSED -', 'Theyre all between -180 and 180 degrees')
+        print('Longitude check for propagation:       | PASSED |-', 'Theyre all between -180 and 180 degrees')
     else:
-        print('Longitude check for propagation:  FAILED -', 'At least one or more position is not between -180 and 180 degrees')
+        print('Longitude check for propagation:       | FAILED |-', 'At least one or more position is not between -180 and 180 degrees')
 
     print()
 
     # --- Latitude and Longitude should be 181 elements each otherwise youre doomed ---
-    print('Latitude and Longitude Check for Propagation Expectation: Latitude: 181, Longitude: 181')
+    print('Latitude and Longitude Check Expectation: Latitude: 181, Longitude: 181')
     lat_lon_check = False
 
     if len(latitude) == 181 and len(longitude) == 181:
         lat_lon_check = True
 
     if lat_lon_check == True:
-        print('Latitude and Longitude check for propagation:  PASSED -', f'Latitude: {len(latitude)}, Longitude: {len(longitude)}')
+        print('Latitude and Longitude check:          | PASSED |-', f'Latitude: {len(latitude)}, Longitude: {len(longitude)}')
     else:
-        print('Latitude and Longitude check for propagation:  FAILED -', f'Latitude: {len(latitude)}, Longitude: {len(longitude)}')
+        print('Latitude and Longitude check:          | FAILED |-', f'Latitude: {len(latitude)}, Longitude: {len(longitude)}')
 
     print()
 
@@ -216,24 +216,27 @@ def check_data():
         nan_check = False
 
     if nan_check == True:
-        print('NaN check for Latitude and Longitude:  PASSED -', 'No NaN values in Latitude and Longitude')
+        print('NaN check for Latitude and Longitude:  | PASSED |-', 'No NaN values in Latitude and Longitude')
     else:
-        print('NaN check for Latitude and Longitude:  FAILED -', 'At least one or more NaN values in Latitude and Longitude')
+        print('NaN check for Latitude and Longitude:  | FAILED |-', 'At least one or more NaN values in Latitude and Longitude')
 
     print()
 
     print(' /// END CHECKING ISS DATA /// ')
+    print('-----------------------------------------------')
 
 # --- This function plots the ISS's ground track on a map of the Earth ---
 def plot_ground_track(latitude, longitude):
-
+    
+    plt.style.use("dark_background")
+    
     plot_break =  np.where( abs(np.diff(longitude)) > 100 )[0]
     
     longitude_plot = np.insert(longitude, plot_break + 1, np.nan)
     latitude_plot = np.insert(latitude, plot_break + 1, np.nan)
     plt.plot(longitude_plot, latitude_plot, color="#BFE2EE", linewidth=0.75)
     plt.plot(longitude_plot[0], latitude_plot[0], marker='o', color="#9ED5E7", markersize=5)
-    plt.annotate('ISS', xytext=(longitude_plot[0] - 7, latitude_plot[0] + 6), xy=(longitude_plot[0], latitude_plot[0]), color="#9ED5E7", fontsize=8, fontweight='bold', arrowprops=dict(arrowstyle='->', color="#9ED5E7", lw=0.5))
+    plt.annotate('ISS', xytext=(longitude_plot[0] - 7, latitude_plot[0] + 6), xy=(longitude_plot[0], latitude_plot[0]), color="#9ED5E7", fontsize=8, fontweight='bold')
     plt.xlim(-180, 180)
     plt.ylim(-90, 90)
 
@@ -248,6 +251,7 @@ def plot_ground_track(latitude, longitude):
     plt.gca().set_aspect('equal')
 
     plt.show()
+
 
 # /// MAIN BLOCK ///
 
@@ -276,30 +280,35 @@ if __name__ == '__main__':
     latitude, longitude = to_lat_lon(positions, times)
 
 
+    menu_option = input('''
+-----------------------------------------------
+/// Welcome to ISS Ground Track ///
 
-    ask_location = input('Do you want to check the ISS location? (y/n): ').lower()
-    if ask_location == 'y':
-        print('longitude right now:', longitude[0])
-        print('latitude right now:', latitude[0])
-    elif ask_location == 'n':
-        print('ok whatever')
-    else:
-        print('what are you saying')
+( 1 ) ISS information
+( 2 ) Show 90-minute ground track on world map
+( 3 ) Run data checks
+( 0 ) Exit
+-----------------------------------------------
+Please select an option:
+''')
 
+    if menu_option == '1':
+        print(f'''
+-----------------------------------------------
+/// Current ISS Information ///
 
-    ask_check = input('Do you want to check the data? (y/n): ').lower()
-    if ask_check == 'y':
-        check_data()
-    elif ask_check == 'n':
-        print('ok whatever')
-    else:
-        print('what are you saying')
-
-
-    ask_plot = input('Do you want to plot the ground track? (y/n): ').lower()
-    if ask_plot == 'y':
+Current ISS Altitude: {iss_altitude:.2f} km
+Current ISS Speed: {iss_speed:.2f} km/s
+Current ISS Latitude: {latitude[0]:.2f} degrees
+Current ISS Longitude: {longitude[0]:.2f} degrees
+-----------------------------------------------
+''')
+    elif menu_option == '2':
+        print('Displaying 90-minute ground track on world map...')
         plot_ground_track(latitude, longitude)
-    elif ask_plot == 'n':
-        print('ok whatever')
+    elif menu_option == '3':
+        check_data()
+    elif menu_option == '0':
+        print('Exiting...')
     else:
-        print('what are you saying')
+        print('Invalid option. Please select a valid option.')
